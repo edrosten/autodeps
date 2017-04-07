@@ -30,9 +30,4 @@ clean:
 #then there's no .d. But that's OK; there are no precise dependencies,
 #but we know we have to rebuild it anyway because the .o is not there.
 #So, it's OK to only pick up .d files that have alredy been generted.
-DEPFILES=$(wildcard *.d)
-
-
-#This is the nice trick whereby make will run whatever is required
-#to build this before including it.
-include $(DEPFILES)
+include $(wildcard *.d)
