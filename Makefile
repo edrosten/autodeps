@@ -13,14 +13,13 @@ prog: a.o b.o
 #but not the .d file. 
 #
 # Arguments mean:
-# -MM output #include dependencies, but ignore system headers
+# -MMD output #include dependencies, but ignore system headers, while
+#      the build continues
 # -MF output dependencies to a file, so other crud goes to the screen
-# -MG make a rule for missing headers
 # -MP make a blank target for dependencies. That way if a dependency is
 #     deleted, make won't fail to build stuff 
 %.o %d: %.cc
-	$(CXX) -c $< $(CXXFLAGS)
-	$(CXX) -MM -MP $(CXXFLAGS) $< -MG -MF $*.d -c
+	$(CXX) -c $< $(CXXFLAGS) -MMD -MP -MF $*.d
 
 
 clean:
@@ -34,12 +33,6 @@ clean:
 DEPFILES=$(wildcard *.d)
 
 
-#The complete dependencies is of course the concatenation of all the
-#individual ones. We need the /dev/null since first time through there 
-#are no depfiles, so cat has no arguments and waits for standard input
-.deps: $(DEPFILES)
-	cat $(DEPFILES) /dev/null > .deps
-
 #This is the nice trick whereby make will run whatever is required
 #to build this before including it.
-include .deps
+include $(DEPFILES)
