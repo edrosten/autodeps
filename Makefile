@@ -2,6 +2,9 @@
 
 all: prog
 
+clean:
+	rm -f *.o *.d prog .deps
+
 prog: a.o b.o
 	$(CXX) -o prog $^
 
@@ -20,10 +23,6 @@ prog: a.o b.o
 #     deleted, make won't fail to build stuff 
 %.o %d: %.cc
 	$(CXX) -c $< $(CXXFLAGS) -MMD -MP -MF $*.d
-
-
-clean:
-	rm -f *.o *.d prog .deps
 
 #Search for all .d files and add them
 #Note that .d files are built in with .o files. If there's no .o yet,
